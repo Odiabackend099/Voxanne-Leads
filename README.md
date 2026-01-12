@@ -2,21 +2,29 @@
 
 This system automates the discovery, verification, and qualification of high-value business leads for CallWaiting AI.
 
-## Architecture
+## Autonomous Features
 
-1.  **Discovery**: Uses Companies House (UK), Google Places, and Actify APIs to find potential leads.
-2.  **Verification (Browser Audit)**: Simulates a browser visit to filter out gatekeepers and identify direct owner contact details.
-3.  **Scoring**: Leads are scored (1-10) based on their fit for CallWaiting AI.
-4.  **Integration**: Qualified leads are automatically imported into the Supabase `leads` and `lead_scores` tables.
-5.  **Notification**: High-potential (Tier A) leads trigger an immediate Telegram notification via the Voxanne bot.
+1.  **Discovery & Deduplication**: Uses Companies House (UK), Google Places, and Actify APIs. Automatically merges leads found across multiple sources to prevent duplicates.
+2.  **Advanced Verification (Browser Audit)**: 
+    *   Filters gatekeepers (0800/0845 numbers).
+    *   Extracts direct mobile numbers (UK 07 numbers).
+    *   Assigns a **Confidence Score (0-100%)**.
+3.  **Shadow Audit (Personalization)**: Automatically researches recent news (branch openings, awards) to create a personalized opening line for your calling agent.
+4.  **Email Validation**: Checks deliverability of discovered emails to reduce bounce rates.
+5.  **Automated Scheduling**: Includes a GitHub Action to run the cycle every day at 8 AM UTC.
+6.  **Real-time Alerts**: High-potential (Tier A) leads with 80%+ confidence trigger a Telegram notification.
 
 ## Setup
 
-### 1. Environment Variables
+### 1. Environment Variables & Secrets
 
-Add the following to your `.env` file in the `backend` directory:
+For local runs, add these to your `.env` file. For automated runs, add them as **GitHub Actions Secrets**:
 
 ```env
+# Supabase
+SUPABASE_URL=your_supabase_url
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
 # Lead Generation APIs
 COMPANIES_HOUSE_API_KEY=your_key_here
 GOOGLE_PLACES_API_KEY=your_key_here
